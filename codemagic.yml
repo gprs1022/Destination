@@ -1,0 +1,37 @@
+workflows:
+  flutter-build:
+    name: Flutter Build Workflow
+    environment:
+      flutter: stable # Use the stable version of Flutter
+      vars:
+        FLUTTER_VERSION: stable
+        ANDROID_KEYSTORE: Encrypted(your_encrypted_keystore)
+        KEYSTORE_PASSWORD: Encrypted(your_keystore_password)
+        KEY_ALIAS: Encrypted(your_key_alias)
+        KEY_PASSWORD: Encrypted(your_key_password)
+    scripts:
+      - name: Install dependencies
+        script: |
+          flutter pub get
+      - name: Generate app launcher icons
+        script: |
+          flutter pub run flutter_launcher_icons:main
+      - name: Run tests
+        script: |
+          flutter test
+      - name: Build APK
+        script: |
+          flutter build apk --release
+      - name: Build AppBundle
+        script: |
+          flutter build appbundle --release
+    artifacts:
+      - build/app/outputs/flutter-apk/app-release.apk
+      - build/app/outputs/bundle/release/app-release.aab
+    publishing:
+      email:
+        recipients:
+          - your-email@example.com
+      google_play:
+        credentials: Encrypted(your_google_play_credentials)
+        track: internal
